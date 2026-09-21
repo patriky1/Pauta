@@ -1,0 +1,79 @@
+/* Sistema visual do Pauta.
+   Vermelho é reservado ao que está acontecendo agora; azul-tinta conduz a navegação. */
+:root {
+  color-scheme: light;
+
+  --papel: #ffffff;
+  --papel-2: #f3f5f9;
+  --papel-3: #e6eaf1;
+  --tinta: #101522;
+  --tinta-suave: #2a3244;
+  --grafite: #586277;
+  --grafite-2: #7b8498;
+  --borda: #e1e5ec;
+  --borda-forte: #cdd3de;
+  --acento: #1b48c4;
+  --acento-escuro: #153a9e;
+  --acento-fraco: #eaeffc;
+  --sinal: #d7193a;
+  --sinal-fraco: #fdecef;
+  --realce: #a86a00;
+  --sucesso: #0f7b52;
+  --sucesso-fraco: #e6f5ee;
+
+  --fonte-titulo: 'Newsreader', Georgia, 'Times New Roman', serif;
+  --fonte-ui: 'IBM Plex Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+
+  /* escala tipográfica fluida: cresce suavemente de 320px a 1440px */
+  --t-xs: 0.78rem;
+  --t-sm: 0.875rem;
+  --t-md: 1rem;
+  --t-lg: clamp(1.05rem, 1rem + 0.25vw, 1.15rem);
+  --t-xl: clamp(1.2rem, 1.08rem + 0.5vw, 1.4rem);
+  --t-2xl: clamp(1.45rem, 1.22rem + 1vw, 1.9rem);
+  --t-3xl: clamp(1.75rem, 1.35rem + 1.8vw, 2.5rem);
+  --t-4xl: clamp(1.95rem, 1.35rem + 2.8vw, 3.2rem);
+
+  --e-1: 4px;
+  --e-2: 8px;
+  --e-3: 12px;
+  --e-4: 20px;
+  --e-5: 32px;
+  --e-6: 48px;
+  --e-7: 72px;
+  --respiro: clamp(16px, 4vw, 32px);
+
+  --raio: 12px;
+  --raio-sm: 8px;
+  --raio-pill: 999px;
+  --sombra-1: 0 1px 2px rgba(16, 21, 34, 0.06);
+  --sombra: 0 1px 2px rgba(16, 21, 34, 0.05), 0 10px 30px rgba(16, 21, 34, 0.08);
+  --largura: 1240px;
+  --altura-cabecalho: 60px;
+  --altura-nav-inferior: 60px;
+  --transicao: 160ms cubic-bezier(0.2, 0, 0, 1);
+}
+
+[data-tema='escuro'] {
+  color-scheme: dark;
+
+  --papel: #0b0f18;
+  --papel-2: #131a26;
+  --papel-3: #1d2635;
+  --tinta: #eef1f6;
+  --tinta-suave: #c7cede;
+  --grafite: #9aa4b8;
+  --grafite-2: #7f8aa0;
+  --borda: #242e3f;
+  --borda-forte: #334055;
+  --acento: #7ea3ff;
+  --acento-escuro: #a3bdff;
+  --acento-fraco: #16223d;
+  --sinal: #ff5c78;
+  --sinal-fraco: #2d1720;
+  --realce: #e0a836;
+  --sucesso: #4ec79a;
+  --sucesso-fraco: #10261e;
+  --sombra-1: 0 1px 2px rgba(0, 0, 0, 0.5);
+  --sombra: 0 1px 2px rgba(0, 0, 0, 0.5), 0 12px 32px rgba(0, 0, 0, 0.45);
+}
