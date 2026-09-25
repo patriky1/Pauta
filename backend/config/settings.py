@@ -23,7 +23,7 @@ def env_list(chave, padrao=""):
 
 SECRET_KEY = env("SECRET_KEY", "dev-inseguro-somente-para-desenvolvimento")
 DEBUG = env_bool("DEBUG", True)
-ALLOWED_HOSTS = env_list("ALLOWED_HOSTS", "localhost,127.0.0.1") or ["localhost", "127.0.0.1"]
+ALLOWED_HOSTS = env_list("ALLOWED_HOSTS", "localhost,127.0.0.1") or ["localhost", "127.0.0.1", ".ngrok-free.app", "banter-payable-lumber.ngrok-free.dev"]
 SITE_URL = env("SITE_URL", "http://localhost:5173").rstrip("/")
 SITE_NAME = env("SITE_NAME", "Pauta")
 

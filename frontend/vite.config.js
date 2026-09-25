@@ -3,7 +3,12 @@ import react from '@vitejs/plugin-react'
 
 export default defineConfig({
   plugins: [react()],
-  server: { port: 5173, open: false },
+  server: { 
+    port: 5173, 
+    open: false,
+    // Libera a URL específica do ngrok ou use ['.ngrok-free.app', '.ngrok-free.dev']
+    allowedHosts: ['banter-payable-lumber.ngrok-free.dev', '.ngrok-free.app', '.ngrok-free.dev']
+  },
   build: {
     target: 'es2019',
     rollupOptions: {
