@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Pauta">
+  <rect width="512" height="512" rx="96" fill="#101522"/>
+  <rect x="112" y="120" width="180" height="20" rx="10" fill="#F7F8FA"/>
+  <rect x="112" y="176" width="288" height="20" rx="10" fill="#F7F8FA"/>
+  <rect x="112" y="232" width="240" height="20" rx="10" fill="#8A93A6"/>
+  <rect x="112" y="288" width="288" height="20" rx="10" fill="#8A93A6"/>
+  <circle cx="352" cy="372" r="34" fill="#E01B3C"/>
+</svg>

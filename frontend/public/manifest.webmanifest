@@ -1,0 +1,17 @@
+{
+  "name": "Pauta — notícias em tempo real",
+  "short_name": "Pauta",
+  "description": "Feed personalizado, cobertura ao vivo e leitura sem ruído.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#101522",
+  "theme_color": "#101522",
+  "lang": "pt-BR",
+  "categories": ["news", "magazines"],
+  "icons": [
+    { "src": "/icone.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
+    { "src": "/icone-mascara.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "maskable" }
+  ]
+}
