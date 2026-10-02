@@ -1,0 +1,106 @@
+# Backend completo do Pauta, iniciando junto com o Docker e voltando sozinho apos
+# reinicializacoes (restart: unless-stopped). O frontend continua com `npm run dev`
+# (ou o build estatico) apontando para http://localhost:8000/api.
+#
+#   docker compose up -d --build        # sobe tudo
+#   docker compose logs -f worker beat  # acompanha a coleta
+#
+# Fluxo: beat (a cada 40 min) -> redis -> worker -> manage.py coletar_noticias -> db -> web (API)
+#
+# Configuracao: backend/.env (opcional). Os enderecos de banco e Redis abaixo sobrescrevem
+# os do .env, porque dentro do Docker os servicos se chamam "db" e "redis".
+# Para o Docker iniciar com o sistema: Linux -> `sudo systemctl enable docker`;
+# Windows/macOS -> Docker Desktop com "Start Docker Desktop when you sign in".
+
+x-backend: &backend
+  image: pauta-backend:local
+  build: ./backend
+  env_file:
+    - path: ./backend/.env
+      required: false
+  environment: &backend-env
+    DB_ENGINE: postgres
+    DB_HOST: db
+    DB_PORT: "5432"
+    DB_NAME: ${DB_NAME:-pauta}
+    DB_USER: ${DB_USER:-postgres}
+    DB_PASSWORD: ${DB_PASSWORD:-postgres}
+    REDIS_URL: redis://redis:6379/1
+    CELERY_BROKER_URL: redis://redis:6379/0
+    CELERY_BEAT_SCHEDULE_FILENAME: /data/beat/celerybeat-schedule
+  restart: unless-stopped
+  depends_on:
+    db:
+      condition: service_healthy
+    redis:
+      condition: service_healthy
+    migrate:
+      condition: service_completed_successfully
+
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: ${DB_NAME:-pauta}
+      POSTGRES_USER: ${DB_USER:-postgres}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-postgres}
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    restart: unless-stopped
+
+  # roda uma vez a cada `docker compose up`: aplica as migracoes e cadastra as fontes
+  # brasileiras (se ainda nao houver categorias, rode `seed_data` e depois `coleta_fontes`)
+  migrate:
+    image: pauta-backend:local
+    build: ./backend
+    env_file:
+      - path: ./backend/.env
+        required: false
+    environment: *backend-env
+    command: >
+      sh -c "python manage.py migrate --noinput &&
+             (python manage.py coleta_fontes ||
+              echo 'coleta_fontes: cadastre as categorias e rode o comando de novo')"
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: "no"
+
+  web:
+    <<: *backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - media-data:/app/media
+
+  # executa a coleta (tarefa apps.coleta.tasks.coletar_noticias -> manage.py coletar_noticias)
+  worker:
+    <<: *backend
+    command: celery -A config worker -l info --concurrency=2
+
+  # o "relogio": dispara a coleta a cada COLETA_INTERVALO_MINUTOS (40). Mantenha UM so beat.
+  # A agenda fica no volume beat-data, entao o beat continua do ponto certo apos reiniciar.
+  beat:
+    <<: *backend
+    command: celery -A config beat -l info
+    volumes:
+      - beat-data:/data/beat
+
+volumes:
+  db-data:
+  media-data:
+  beat-data:

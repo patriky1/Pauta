@@ -1,0 +1,19 @@
+# Agendador da coleta: dispara a tarefa a cada COLETA_INTERVALO_MINUTOS (40).
+# Rode UM unico beat. A agenda salva em --schedule faz o beat continuar do ponto certo
+# depois de reiniciar (e coletar logo se o horario ja tiver passado).
+[Unit]
+Description=Pauta - agendador da coleta de noticias (Celery Beat)
+After=network-online.target redis-server.service postgresql.service
+Wants=network-online.target
+
+[Service]
+User=pauta
+Group=pauta
+WorkingDirectory=/srv/pauta/backend
+EnvironmentFile=/srv/pauta/backend/.env
+ExecStart=/srv/pauta/backend/venv/bin/celery -A config beat -l info --schedule=/srv/pauta/backend/celerybeat-schedule
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

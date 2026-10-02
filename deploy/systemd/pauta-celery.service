@@ -1,0 +1,21 @@
+# Worker da coleta (executa manage.py coletar_noticias quando o beat manda).
+# Copie para /etc/systemd/system/ e ajuste User/caminhos. Depois:
+#   sudo systemctl daemon-reload && sudo systemctl enable --now pauta-celery pauta-beat
+[Unit]
+Description=Pauta - worker da coleta de noticias (Celery)
+After=network-online.target redis-server.service postgresql.service
+Wants=network-online.target
+
+[Service]
+User=pauta
+Group=pauta
+WorkingDirectory=/srv/pauta/backend
+EnvironmentFile=/srv/pauta/backend/.env
+ExecStart=/srv/pauta/backend/venv/bin/celery -A config worker -l info --concurrency=2
+Restart=always
+RestartSec=10
+KillSignal=SIGTERM
+TimeoutStopSec=60
+
+[Install]
+WantedBy=multi-user.target
